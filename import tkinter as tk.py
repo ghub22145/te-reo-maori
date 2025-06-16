@@ -1,27 +1,27 @@
 import tkinter as tk
 from tkinter import messagebox
 
-# 10 Te Reo Moaori questions
-questions = [
-    ("Aroha means 'love' in Māori.", True),
-    ("Kia ora means 'goodbye' in Māori.", False),
-    ("Whānau means 'family' in Māori.", True),
-    ("Kai means 'food' in Māori.", True),
-    ("Moana means 'sky' in Māori.", False),
-    ("Kōrero means 'to speak or talk' in Māori.", True),
-    ("Waiata means 'song' in Māori.", True),
-    ("Tamariki means 'adults' in Māori.", False),
-    ("Kākahu means 'clothes' in Māori.", True),
-    ("Roto means 'outside' in Māori.", False),
+original_questions = [
+    {"question": "Aroha means 'love' in Māori.", "answer": True},
+    {"question": "Kia ora means 'goodbye' in Māori.", "answer": False},
+    {"question": "Whānau means 'family' in Māori.", "answer": True},
+    {"question": "Kai means 'food' in Māori.", "answer": True},
+    {"question": "Moana means 'sky' in Māori.", "answer": False},
+    {"question": "Kōrero means 'to speak or talk' in Māori.", "answer": True},
+    {"question": "Waiata means 'song' in Māori.", "answer": True},
+    {"question": "Tamariki means 'adults' in Māori.", "answer": False},
+    {"question": "Kākahu means 'clothes' in Māori.", "answer": True},
+    {"question": "Roto means 'outside' in Māori.", "answer": False},
 ]
 
 class TeReoQuiz:
     def __init__(self, root):
         self.root = root
-        self.root.title("Te Reo Māori Quiz")
+        self.root.title("Te Reo Maori Quiz")
 
         self.score = 0
-        self.q_index = 0
+        self.questions = original_questions.copy()
+        self.current_question = None
 
         self.question_label = tk.Label(root, text="", font=("Arial", 16), wraplength=400)
         self.question_label.pack(pady=20)
@@ -38,25 +38,26 @@ class TeReoQuiz:
         self.load_question()
 
     def load_question(self):
-        if self.q_index < len(questions):
-            q_text, _ = questions[self.q_index]
-            self.question_label.config(text=q_text)
+        if self.questions:
+            self.current_question = self.questions.pop(0) 
+            self.question_label.config(text=self.current_question["question"])
         else:
             self.end_quiz()
 
     def check_answer(self, answer):
-        correct = questions[self.q_index][1]
-        if answer == correct:
+        if answer == self.current_question["answer"]:
             self.score += 1
             self.score_label.config(text=f"Score: {self.score}")
-        self.q_index += 1
+        else:
+            self.questions.append(self.current_question)
+
         self.load_question()
 
     def end_quiz(self):
-        messagebox.showinfo("Quiz Complete", f"You got {self.score}/{len(questions)} correct!")
+        messagebox.showinfo("Quiz Complete", f"You got all questions correct!\nFinal Score: {self.score}")
         self.root.destroy()
 
-# Run thee program
+
 if __name__ == "__main__":
     root = tk.Tk()
     quiz = TeReoQuiz(root)
